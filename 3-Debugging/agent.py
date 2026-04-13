@@ -9,7 +9,6 @@ from langchain_core.messages import BaseMessage
 import os
 from dotenv import load_dotenv
 from langgraph.graph import StateGraph, START, END
-from langgraph.prebuilt import ToolNode
 from langgraph.prebuilt import tools_condition
 
 

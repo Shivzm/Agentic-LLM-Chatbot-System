@@ -1,5 +1,7 @@
 langgraph
 langchain
+langchain-community
+langchain-core
 langsmith
 python-dotenv
 langchain-groq

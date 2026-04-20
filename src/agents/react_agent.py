@@ -1,16 +1,37 @@
+"""ReAct Agent using LangGraph.
+
+Implements the ReAct (Reasoning + Acting) pattern for autonomous agents
+that can reason about problems and execute tools.
+"""
+
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode, tools_condition
-from langgraph.checkpoint.memory import MemorySaver
-from agents.base import AgentState, get_llm
-from tools.search import search_tool
-from tools.custom import multiply
+from langchain_core.messages import HumanMessage
 
-def build_react_agent(checkpointer=None):
-    llm = get_llm()
-    tools = [search_tool, multiply]
+from src.agents.base import AgentState, get_llm, get_memory_checkpointer, get_react_model
+from config.settings import settings
+from tools import search_web, multiply
+
+
+def build_react_agent(model: str | None = None, checkpointer=None):
+    """Build and compile the ReAct agent graph.
+    
+    Args:
+        model: Optional model override. Uses settings.default_model if None.
+        checkpointer: Optional state persister. Uses MemorySaver if None.
+    
+    Returns:
+        Compiled LangGraph with agent and tools nodes.
+    """
+    if model is None:
+        model = settings.default_model
+    
+    llm = get_llm(get_react_model())
+    tools = [search_web, multiply]
     llm_with_tools = llm.bind_tools(tools)
 
     def call_model(state: AgentState):
+        """Agent node that calls the LLM."""
         return {"messages": [llm_with_tools.invoke(state["messages"])]}
 
     builder = StateGraph(AgentState)
@@ -20,4 +41,17 @@ def build_react_agent(checkpointer=None):
     builder.add_conditional_edges("agent", tools_condition)
     builder.add_edge("tools", "agent")
 
+    if checkpointer is None:
+        checkpointer = get_memory_checkpointer()
+    
     return builder.compile(checkpointer=checkpointer)
+
+
+# Convenience export
+graph = build_react_agent()
+
+
+if __name__ == "__main__":
+    # Demo/test code
+    response = graph.invoke({"messages": [HumanMessage(content="What is 5 + 3?")]})
+    print(response["messages"][-1].content)

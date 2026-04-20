@@ -1,11 +1,46 @@
 # Python-generated files
 __pycache__/
 *.py[oc]
+*.pyc
+*.pyo
+*.egg-info
+*.egg
 build/
 dist/
-wheels/
-*.egg-info
 
 # Virtual environments
-.venv
+.venv/
+
+# Environment variables and secrets
 .env
+.env.local
+
+# IDE and Editor files
+.vscode/
+*.swp
+*.swo
+*~
+
+# Testing and Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Logging
+*.log
+logs/
+
+# LangSmith artifacts
+.langsmith/
+
+# Temporary files
+*.tmp
+tmp/
+

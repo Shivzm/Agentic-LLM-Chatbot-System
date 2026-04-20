@@ -13,5 +13,6 @@ dependencies = [
     "langgraph>=1.0.4",
     "langgraph-cli[inmem]>=0.4.15",
     "langsmith>=0.4.56",
+    "pytest>=9.0.3",
     "python-dotenv>=1.2.1",
 ]

@@ -5,3 +5,4 @@ python-dotenv
 langchain-groq
 langchain_tavily
 langgraph-cli[inmem]
+pytest
